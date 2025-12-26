@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Библиотечный отслеживатель3000</title>
+</head>
+<body>
+
+<h1>Каталог библиотеки</h1>
+
+<a th:href="@{/available}">Показать только доступные книги</a>
+
+<ul>
+    <!-- Отображение книг -->
+    <li th:each="book : ${books}">
+
+        <!-- Название и автор -->
+        <span th:text="${book.title}"></span> —
+        <span th:text="${book.author}"></span> |
+
+        <!-- Статус доступности -->
+        <span th:text="${book.available ? 'Доступна' : 'Выдана'}"></span> |
+
+        <!-- Статус прочтения -->
+        <span th:text="${book.read ? 'Прочитана' : 'Не прочитана'}"></span>
+
+        <!-- Удаление книги -->
+        <a th:href="@{/deleteBook/{id}(id=${book.id})}">Удалить</a>
+
+        <!-- Форма изменения доступности (КАК В TODO) -->
+        <form th:action="@{/updateBook/{id}(id=${book.id})}"
+              method="post"
+              style="display:inline;">
+
+            <input type="hidden"
+                   name="available"
+                   th:value="true"
+                   th:if="${!book.available}">
+
+            <input type="hidden"
+                   name="available"
+                   th:value="false"
+                   th:if="${book.available}">
+
+            <button type="submit"
+                    th:text="${book.available ? 'Отметить как выданную' : 'Отметить как доступную'}">
+            </button>
+        </form>
+
+        <!-- Форма отметки как прочитанной -->
+        <form th:action="@{/readBook/{id}(id=${book.id})}"
+              method="post"
+              style="display:inline;">
+
+            <button type="submit"
+                    th:disabled="${book.read}">
+                Отметить как прочитанную
+            </button>
+        </form>
+
+    </li>
+</ul>
+
+<h2>Добавить новую книгу</h2>
+
+<!-- Форма добавления книги -->
+<form th:action="@{/addBook}" method="post">
+    <label for="title">Название:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="author">Автор:</label>
+    <input type="text" id="author" name="author" required>
+
+    <button type="submit">Добавить книгу</button>
+</form>
+
+</body>
+</html>
